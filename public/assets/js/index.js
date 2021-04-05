@@ -1,3 +1,24 @@
+const express = require('express');
+const path = require('path');
+const window = require('window');
+
+
+// Sets up the Express App
+
+const app = express();
+const PORT = 3001;
+
+app.get('*', (req, res) => res.sendFile(path.join(____dirname, 'index.html')));
+
+app.get('/notes', (req, res) => res.sendFile(path.join(____dirname, 'notes.html')));
+
+app.get('/api/notes', (req, res) => res.json(activeNote));
+
+// Sets up the Express app to handle data parsing
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+
 let noteTitle;
 let noteText;
 let saveNoteBtn;
@@ -178,3 +199,5 @@ if (window.location.pathname === '/notes') {
 }
 
 getAndRenderNotes();
+
+app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
