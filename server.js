@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-// const fs = requrire('fs');
+const fs = require('fs');
 
 const app = express();
 const PORT = 3001;
@@ -13,18 +13,27 @@ app.use(express.static('public'));
 //API ROUTES
 app.get('/api/notes', (req, res) => res.json(JSON.parse(fs.readFileSync("./db/db.json", "utf8"))));
 
-app.get('/api/notes/:id', (req, res) => res.json(newNote));
+app.get('/api/notes/:id', (req, res) => {
+    const id = req.params.id;
+
+    console.log(id)
+
+    res.end();
+});
+// res.json(newNote));
     // let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"))
     // res.json(savedNotes[Number(req.params.id)])
 
 app.post('/api/notes',(req, res) => {
-   var noteTitle = req.body.noteTitle;
-   var noteText = req.body.noteText;
+   var noteTitle = req.body.title;
+   var noteText = req.body.text;
+
+   
     
     // newNote.routeName = newNote.name
-    console.log("noteTitle" + "noteText");
+    console.log(noteTitle + noteText);
     
-    res.json(true)
+    res.json({title: noteTitle, text: noteText})
     })
 //HTML ROUTES
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, './public/notes.html')));
