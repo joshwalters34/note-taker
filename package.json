@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "node-fetch": "^2.6.1",
+    "short-unique-id": "^3.2.3",
     "window": "^4.2.7"
   },
   "devDependencies": {},

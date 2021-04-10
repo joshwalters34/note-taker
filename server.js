@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const {default:ShortUniqueId} = require('short-unique-id');
 
 const app = express();
 const PORT = 3001;
@@ -24,16 +25,28 @@ app.get('/api/notes/:id', (req, res) => {
     // let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"))
     // res.json(savedNotes[Number(req.params.id)])
 
-app.post('/api/notes',(req, res) => {
-   var noteTitle = req.body.title;
-   var noteText = req.body.text;
+app.post('/api/notes',(req, res) =>  {
+//    var note = {
+//    title: req.body.title,
+//    text: req.body.text
+// }
+    const uid = new ShortUniqueId();
+    const note = 
+    {
+        "title": req.body.title,
+        "text": req.body.text,
+        "id": uid()
+    }
 
+    const currentArr = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
    
+   currentArr.push(note);
+
+   fs.writeFileSync("./db/db.json", JSON.stringify(currentArr));
+   
+    console.log("This is line 34" + currentArr);
     
-    // newNote.routeName = newNote.name
-    console.log(noteTitle + noteText);
-    
-    res.json({title: noteTitle, text: noteText})
+    res.json(true)
     })
 //HTML ROUTES
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, './public/notes.html')));
