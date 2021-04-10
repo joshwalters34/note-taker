@@ -4,7 +4,7 @@ const fs = require('fs');
 const {default:ShortUniqueId} = require('short-unique-id');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
