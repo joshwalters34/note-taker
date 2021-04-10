@@ -1,38 +1,17 @@
-const express = require('express');
-const path = require('path');
-const fetch = require('node-fetch')
-const url = require('url');
-
-
-// Sets up the Express App
-
-const app = express();
-const PORT = 3001;
-
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-
-app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'notes.html')));
-
-app.get('/api/notes', (req, res) => res.json(activeNote));
-
-// Sets up the Express app to handle data parsing
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-
 let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
 
-if (url.pathname === '/notes') {
+if (window.location.pathname === '/notes') {
   noteTitle = document.querySelector('.note-title');
   noteText = document.querySelector('.note-textarea');
   saveNoteBtn = document.querySelector('.save-note');
   newNoteBtn = document.querySelector('.new-note');
   noteList = document.querySelectorAll('.list-container .list-group');
 }
+
 
 // Show an element
 const show = (elem) => {
@@ -48,7 +27,7 @@ const hide = (elem) => {
 let activeNote = {};
 
 const getNotes = () =>
-  fetch('http://localhost:3001/api/notes', {
+  fetch('/api/notes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -56,7 +35,7 @@ const getNotes = () =>
   });
 
 const saveNote = (note) =>
-  fetch('http://localhost:3001/api/notes', {
+  fetch('/api/notes', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -65,7 +44,7 @@ const saveNote = (note) =>
   });
 
 const deleteNote = (id) =>
-  fetch(`http://localhost:3001/api/notes/${id}`, {
+  fetch(`/api/notes/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -139,7 +118,7 @@ const handleRenderSaveBtn = () => {
 // Render the list of note titles
 const renderNoteList = async (notes) => {
   let jsonNotes = await notes.json();
-  if (url.pathname === '/notes') {
+  if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
 
@@ -184,7 +163,7 @@ const renderNoteList = async (notes) => {
     noteListItems.push(li);
   });
 
-  if (url.pathname === '/notes') {
+  if (window.location.pathname === '/notes') {
     noteListItems.forEach((note) => noteList[0].append(note));
   }
 };
@@ -192,7 +171,7 @@ const renderNoteList = async (notes) => {
 // Gets notes from the db and renders them to the sidebar
 const getAndRenderNotes = () => getNotes().then(renderNoteList);
 
-if (url.pathname === '/notes') {
+if (window.location.pathname === '/notes') {
   saveNoteBtn.addEventListener('click', handleNoteSave);
   newNoteBtn.addEventListener('click', handleNewNoteView);
   noteTitle.addEventListener('keyup', handleRenderSaveBtn);
@@ -200,5 +179,3 @@ if (url.pathname === '/notes') {
 }
 
 getAndRenderNotes();
-
-app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
