@@ -21,15 +21,10 @@ app.get('/api/notes/:id', (req, res) => {
 
     res.end();
 });
-// res.json(newNote));
-    // let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"))
-    // res.json(savedNotes[Number(req.params.id)])
+
 
 app.post('/api/notes',(req, res) =>  {
-//    var note = {
-//    title: req.body.title,
-//    text: req.body.text
-// }
+
     const uid = new ShortUniqueId();
     const note = 
     {
@@ -48,12 +43,21 @@ app.post('/api/notes',(req, res) =>  {
     
     res.json(true)
     })
+
+app.get('/api/notes/:id', (req, res) => {
+  
+
+    const currentArr = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
+    currentArr = currentArr.filter(({id}) => id !== req.params.id);
+    
+
+    fs.writeFileSync("./db/db.json", JSON.stringify(currentArr));
+})
+
 //HTML ROUTES
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, './public/notes.html')));
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, './public/index.html')));
-//need to post each saved note
-
 
 
 
